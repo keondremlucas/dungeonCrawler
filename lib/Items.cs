@@ -11,6 +11,7 @@ namespace lib
 
        public string Type {get; set;}
        public decimal Level {get; set;}
+
     
 
     }
