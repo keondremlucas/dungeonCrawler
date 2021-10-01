@@ -93,6 +93,10 @@ namespace lib
                             case 3:
                                 ChangeLocations(Database);
                                 break;
+
+                            case 4:
+                                RaisePlayerLvl(Database);
+                            break;
                         }
                         break;
                     }
