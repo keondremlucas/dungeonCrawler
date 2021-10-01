@@ -12,6 +12,7 @@ namespace lib
         {
             Random Random = new Random();
             var Player = Database.Characters.First();
+            bool Atbegining = true;
             switch (Player.Location)
             {
                 case "Home":
@@ -41,9 +42,14 @@ namespace lib
                     }
                 case "Starting Town":
                     {
-                        Console.WriteLine("Now You must Begin Your Journey to defeat FinalBoss");
-                        Console.WriteLine("You must Explore the world to Become strong enough to Eventually");
-                        Console.WriteLine("Defeat FinalBoss. what will you do next ?");
+                        if (Atbegining == true)
+                        {
+                            Console.WriteLine("Now You must Begin Your Journey to defeat FinalBoss");
+                            Console.WriteLine("You must Explore the world to Become strong enough to Eventually");
+                            Console.WriteLine("Defeat FinalBoss. what will you do next ?");
+                            Atbegining = false;
+                        }
+
                         Console.Write("1.Explore World 2.Check Inventory");
                         if (Database.Map.Where(map => map.IsDiscovered == 1).Count() > 1) { Console.Write("3.Change Location"); }
                         var Input = Int32.Parse(Console.ReadLine());
@@ -441,8 +447,9 @@ namespace lib
         {
             Random Random = new Random();
             var locations = Database.Map.Where(map => map.IsDiscovered == 0).ToList();
-            if(locations.Count()==0){
-                locations=Database.Map.Where(loc=>loc.Id!=8).ToList();
+            if (locations.Count() == 0)
+            {
+                locations = Database.Map.Where(loc => loc.Id != 8).ToList();
             }
             var locationOption = locations[Random.Next(0, locations.Count() - 1)];
             var Player = Database.Characters.First();
@@ -527,7 +534,7 @@ namespace lib
 
             //var Weapon = Database.Items.Where(item => Player.Id == item);
             Random Random = new Random();
-            var monster = Database.Characters.Where(mon => mon.Type == "Boss").First();
+            var monster = Database.Characters.Where(mon => mon.Type == "BOSS").First();
 
             Console.WriteLine($"YOUVE ENCOUNTERED A LEVEL {monster.Level} {monster.Name} WITH HP {monster.Health} AND ENERGY {monster.Energy}. {monster.Description} ");
             bool fighting = true;
