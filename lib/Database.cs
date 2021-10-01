@@ -9,7 +9,6 @@ namespace lib
     {
         public DbSet<Character> Characters { get; set; }
         public DbSet<Item> Items { get; set; }
-        public DbSet<Monster> Monsters { get; set; }
         public DbSet<Location> Map { get; set; }
 
         public DbSet<Log> Logs { get; set; }

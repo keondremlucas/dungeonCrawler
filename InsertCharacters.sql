@@ -1,13 +1,24 @@
 -- INSERT INTO Characters (Name , Description, Type, Level, Health, Energy, Location) VALUES ("Hero","The main character", "Player", 1, 100, 100, "Home" );
--- INSERT INTO Monsters (Name , Description, Type, Level,Health, Energy, Location) VALUES ("Final-Boss","The antagonist", "Monster", 100, 1000, 1000, "The Labryinth" );
--- INSERT INTO Map (Name , Size, Type) VALUES ("Starting Town",200, "City" );
+-- INSERT INTO Characters (Name , Description, Type, Level,Health, Energy, Location) VALUES ("Final-Boss","The antagonist", "BOSS", 100, 1000, 1000, "The Labryinth" );
+-- INSERT INTO Map (Name , Type, Description, IsDiscovered) VALUES ("Starting Town", "City","Journey start", 1 );
 -- INSERT INTO Items (Name , Description, Type, Level) VALUES ("Big Stick","Found on the Ground its just a stick", "Weapon", 1);
--- Alter TABLE Map ADD Description text
 
 
--- INSERT INTO Map (Name , Size, Type) VALUES ("Swampy Swamp",200, "Swamp" );
--- INSERT INTO Map (Name , Size, Type) VALUES ("Hollow Forest",200, "Forest" );
--- INSERT INTO Map (Name , Size, Type) VALUES ("Big Desert",200, "Desert" );
--- INSERT INTO Map (Name , Size, Type) VALUES ("Smol Castle",200, "Castle" );
--- INSERT INTO Map (Name , Size, Type) VALUES ("Texas",200, "City" );
--- INSERT INTO Map (Name , Size, Type) VALUES ("Toxic Beach",200, "Beach" );
+
+-- INSERT INTO Map (Name , Type, Description, IsDiscovered) VALUES ("Swampy Swamp", "Swamp" ,"swamp",0);
+-- INSERT INTO Map (Name , Type, Description, IsDiscovered) VALUES ("Hollow Forest", "Forest","an empty forrest",0 );
+-- INSERT INTO Map (Name , Type, Description, IsDiscovered) VALUES ("Big Desert", "Desert", "a hugte dessert",0);
+-- INSERT INTO Map (Name , Type, Description, IsDiscovered) VALUES ("Smol Castle", "Castle", "a tiny castle", 0 );
+-- INSERT INTO Map (Name , Type, Description, IsDiscovered) VALUES ("Texas", "City","yee haw",0 );
+-- INSERT INTO Map (Name , Type, Description, IsDiscovered) VALUES ("Toxic Beach", "Beach","A Beach Which is Toxic. Careful you may Be poisoned.", 0 );
+
+
+-- INSERT INTO Characters (Name , Description, Type, Level,Health, Energy, Location) VALUES ("Spider","8 legs and 8 eyes and webs", "Monster", 1, 10, 5, "all" );
+-- INSERT INTO Characters (Name , Description, Type, Level,Health, Energy, Location) VALUES ("Spiderling"," small 8 legs and 8 eyes and webs", "Monster", 1, 10, 5, "all" );
+-- INSERT INTO Characters (Name , Description, Type, Level,Health, Energy, Location) VALUES ("butterfly","Scary", "Monster", 1, 1, 1, "all" );
+-- INSERT INTO Characters (Name , Description, Type, Level,Health, Energy, Location) VALUES ("Raccoon","Trash Panda", "Monster", 1, 10, 5, "all" );
+
+INSERT INTO Items (Name , Description, Type, Level) VALUES ("Magic Sword","Levels up with You!", "Weapon", 1);
+UPDATE Characters set Location = "Home" WHERE Id = 1;
+
+

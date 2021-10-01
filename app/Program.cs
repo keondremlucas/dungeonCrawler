@@ -7,7 +7,7 @@ namespace app
         static void Main(string[] args)
         {   
             var db = new Database();
-
+            // Scenario.Death(db);
             bool run = true;
             while(run)
             {

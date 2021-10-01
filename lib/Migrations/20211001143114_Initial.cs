@@ -45,31 +45,13 @@ namespace lib.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
-                    Size = table.Column<int>(type: "INTEGER", nullable: false),
-                    Type = table.Column<string>(type: "TEXT", nullable: true)
+                    Description = table.Column<string>(type: "TEXT", nullable: true),
+                    Type = table.Column<string>(type: "TEXT", nullable: true),
+                    IsDiscovered = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Map", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Monsters",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: true),
-                    Description = table.Column<string>(type: "TEXT", nullable: true),
-                    Type = table.Column<string>(type: "TEXT", nullable: true),
-                    Level = table.Column<decimal>(type: "TEXT", nullable: false),
-                    Health = table.Column<decimal>(type: "TEXT", nullable: false),
-                    Energy = table.Column<decimal>(type: "TEXT", nullable: false),
-                    Location = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Monsters", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -82,8 +64,7 @@ namespace lib.Migrations
                     Description = table.Column<string>(type: "TEXT", nullable: true),
                     Type = table.Column<string>(type: "TEXT", nullable: true),
                     Level = table.Column<decimal>(type: "TEXT", nullable: false),
-                    CharacterId = table.Column<int>(type: "INTEGER", nullable: true),
-                    MonsterId = table.Column<int>(type: "INTEGER", nullable: true)
+                    CharacterId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -94,23 +75,12 @@ namespace lib.Migrations
                         principalTable: "Characters",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Items_Monsters_MonsterId",
-                        column: x => x.MonsterId,
-                        principalTable: "Monsters",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Items_CharacterId",
                 table: "Items",
                 column: "CharacterId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Items_MonsterId",
-                table: "Items",
-                column: "MonsterId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -126,9 +96,6 @@ namespace lib.Migrations
 
             migrationBuilder.DropTable(
                 name: "Characters");
-
-            migrationBuilder.DropTable(
-                name: "Monsters");
         }
     }
 }

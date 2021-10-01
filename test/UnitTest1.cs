@@ -25,19 +25,6 @@ namespace test
         }
 
 
-
-        [Fact]
-        public void ShouldCreateMonster()
-        {
-            using var context = new Database(_options);
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
-
-            context.Add(new Monster() { Name = "Spider",Description = "scarySpider",Type="Aracnid",Level = 20,Health=20,Energy=20,Location="web"});
-            context.SaveChanges();
-
-            context.Monsters.Count().Should().Be(1);
-        }
         [Fact]
         public void ShouldCreateItem()
         {
@@ -100,20 +87,7 @@ namespace test
             context.Characters.First().Items.Count().Should().Be(1);
             context.Characters.First().Items.First().Should().Be(context.Items.First());
         }
-        [Fact]
-        public void ShouldAddItemToMonster()
-        {
-            using var context = new Database(_options);
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
-            var Monster = (new Monster() { Name = "Spider",Description = "scarySpider",Type="Aracnid",Level = 20,Health=20,Energy=20,Location="web"});
-            var Item = new Item() { Name = "Spider",Description = "scarySpider",Type="Aracnid",Level = 20};
-            Monster.Items.Add(Item);
-            context.Add(Monster);
-            context.SaveChanges();
-            context.Monsters.First().Items.Count().Should().Be(1);
-            context.Monsters.First().Items.First().Should().Be(context.Items.First());
-        }
+        
 
 
     }

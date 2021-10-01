@@ -63,9 +63,6 @@ namespace lib.Migrations
                     b.Property<decimal>("Level")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("MonsterId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
@@ -76,8 +73,6 @@ namespace lib.Migrations
 
                     b.HasIndex("CharacterId");
 
-                    b.HasIndex("MonsterId");
-
                     b.ToTable("Items");
                 });
 
@@ -87,11 +82,14 @@ namespace lib.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Size")
+                    b.Property<int>("IsDiscovered")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Type")
                         .HasColumnType("TEXT");
@@ -115,55 +113,14 @@ namespace lib.Migrations
                     b.ToTable("Logs");
                 });
 
-            modelBuilder.Entity("lib.Monster", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("Energy")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("Health")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("Level")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Location")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Type")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Monsters");
-                });
-
             modelBuilder.Entity("lib.Item", b =>
                 {
                     b.HasOne("lib.Character", null)
                         .WithMany("Items")
                         .HasForeignKey("CharacterId");
-
-                    b.HasOne("lib.Monster", null)
-                        .WithMany("Items")
-                        .HasForeignKey("MonsterId");
                 });
 
             modelBuilder.Entity("lib.Character", b =>
-                {
-                    b.Navigation("Items");
-                });
-
-            modelBuilder.Entity("lib.Monster", b =>
                 {
                     b.Navigation("Items");
                 });
