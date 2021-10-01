@@ -400,6 +400,19 @@ namespace lib
             Console.WriteLine("Please Select where you would like to go by id.");
             var goTo = Int32.Parse(Console.ReadLine());
 
+            if(goTo==8){
+
+                var player=Database.Characters.First();
+                if(player.Level<5){
+                    Console.WriteLine("You're not yet strong enough. Continue your training montage!");
+                    return;
+                }else{
+                    player.Location=discoveredLocations.Where(loc=>loc.Id==goTo).First().Name;
+                    Database.SaveChanges();
+                    BossFight(Database);
+                }
+            }
+
             Database.Characters.First().Location = discoveredLocations.Where(loc => loc.Id == goTo).First().Name;
 
             Database.SaveChanges();
@@ -487,9 +500,320 @@ namespace lib
             database.SaveChanges();
         }
 
-        public static void BossFight(Database database)
+        public static void BossFight(Database Database)
         {
 
+            Console.WriteLine("After exploring the world to gain experience, you have finally become strong enough to challenge the FINALBOSS.");
+            Console.WriteLine("But are you strong enough to stop him and save your family?");
+            Console.WriteLine("It's too late to worry about that now for you have arrived at the Castle of Doom.");
+            Console.WriteLine("The FINALBOSS comes to meet you and the battle begins!");
+
+            var Player = Database.Characters.First();
+
+            //var Weapon = Database.Items.Where(item => Player.Id == item);
+            Random Random = new Random();
+            var monster = Database.Characters.Where(mon => mon.Type == "Boss").First();
+           
+            Console.WriteLine($"YOUVE ENCOUNTERED A LEVEL {monster.Level} {monster.Name} WITH HP {monster.Health} AND ENERGY {monster.Energy}. {monster.Description} ");
+            bool fighting = true;
+            var weapon = Player.Items.First();
+            var health = monster.Health;
+            var level = monster.Level;
+            var energy = monster.Energy;
+
+            while (fighting)
+            {
+                Console.WriteLine();
+                Console.WriteLine($"{monster.Name}: Level: {monster.Level}  Health: {health} Energy:{energy}");
+                Console.WriteLine();
+                Console.WriteLine($"Level: {Player.Level} Hero  Health: {Player.Health}  Energy:{Player.Energy}   Weapon Level: {weapon.Level}");
+                Console.WriteLine();
+                Console.WriteLine("What will you do?");
+                Console.WriteLine("1.Attack 2.Use an Item/Spell 3.Try to Run");
+                var Input = Int32.Parse(Console.ReadLine());
+                Console.WriteLine();
+                switch (Input)
+                {
+                    case 1:
+                        if (Random.Next(0, 100) > 20)
+                        {
+                            Console.WriteLine($"You attacked the {monster.Name} for {(int)Player.Level + (int)weapon.Level} damage");
+                            health -= (int)Player.Level + (int)weapon.Level;
+                            if (health <= 0)
+                            {
+                                fighting = false;
+                                Console.WriteLine($"You Defeated {monster.Name} and Gained {level} experience");
+                                LevelUp(Database, level, Player, weapon);
+
+                                if (Random.Next(0, 100) > 50)
+                                {
+                                    Loot(Database, Player);
+                                }
+
+                                Console.WriteLine("Congrats! You managed to defeat the FINALBOSS after a hard won fight and saved your family! You WIN!");
+                            }
+
+                        }
+                        else
+                        {
+                            Console.WriteLine($"YOU MISSED!!!!");
+                        }
+                        if (Random.Next(0, 100) > 20 && health > 0)
+                        {
+                            Console.WriteLine($"{monster.Name} attacked the for {level} damage");
+                            Player.Health -= level;
+                            Database.SaveChanges();
+
+                            if (Player.Health <= 0)
+                            {
+                                fighting = false;
+                                Death(Database);
+                            }
+                        }
+                        else if (health > 0)
+                        {
+                            Console.WriteLine($"YOU MANAGED TO DODGE THE {monster.Name}'S ATTACK !!!!");
+                        }
+                        break;
+
+                    case 2:
+
+                        var items = Player.Items.Where(item => item.Type != "Weapon" && item.Type != "Useless");
+
+                        if (items.Count() > 0)
+                        {
+
+
+                            foreach (var item in items)
+                            {
+
+                                Console.WriteLine($"Item Id: {item.Id} Item Name: {item.Name} Description: {item.Description}");
+                            }
+
+                            Console.WriteLine("Enter the id of the item you want to use: ");
+                            var itemChoice = Int32.Parse(Console.ReadLine());
+
+                            var useItem = Player.Items.Where(item => item.Id == itemChoice).First();
+
+                            if (useItem.Type == "Healing")
+                            {
+
+                                if (Player.Health + useItem.Level > ((int)Player.Level * 100))
+                                {
+                                    Player.Health = (int)Player.Level * 100;
+                                    Player.Items.Remove(useItem);
+                                    Database.SaveChanges();
+                                }
+                                else
+                                {
+                                    Player.Health += useItem.Level;
+                                    Player.Items.Remove(useItem);
+                                    Database.SaveChanges();
+                                }
+
+                                if (Random.Next(0, 100) > 20 && health > 0)
+                                {
+                                    Console.WriteLine($"{monster.Name} attacked the for {level / 10} damage");
+                                    Player.Health -= level;
+                                    Database.SaveChanges();
+
+                                    if (Player.Health <= 0)
+                                    {
+                                        fighting = false;
+                                        Death(Database);
+                                    }
+                                }
+                                else if (health > 0)
+                                {
+                                    Console.WriteLine($"YOU MANAGED TO DODGE THE {monster.Name}'S ATTACK !!!!");
+                                }
+
+
+                            }
+                            else if (useItem.Type == "Spell")
+                            {
+
+                                if (Player.Energy > useItem.Level)
+                                {
+
+                                    Console.WriteLine($"You attacked the {monster.Name} for {(int)Player.Level + (int)useItem.Level} damage");
+                                    Player.Energy -= useItem.Level;
+                                    health -= (int)Player.Level + (int)weapon.Level;
+                                    Database.SaveChanges();
+                                }
+                                else
+                                {
+                                    Console.WriteLine("You don't have enough energy to cast the SPELL!!!");
+                                }
+
+                                if (health <= 0)
+                                {
+                                    fighting = false;
+                                    Console.WriteLine($"You Defeated {monster.Name} and Gained {level / 10} experience");
+                                    LevelUp(Database, level, Player, weapon);
+
+                                    if (Random.Next(0, 100) > 50)
+                                    {
+                                        Loot(Database, Player);
+                                    }
+
+                                    Console.WriteLine("Congrats! You managed to defeat the FINALBOSS after a hard won fight and saved your family! You WIN!");
+                                }
+
+                                if (Random.Next(0, 100) > 20 && health > 0)
+                                {
+                                    Console.WriteLine($"{monster.Name} attacked the for {level} damage with {useItem.Name}");
+                                    Player.Health -= level;
+                                    Database.SaveChanges();
+
+                                    if (Player.Health <= 0)
+                                    {
+                                        fighting = false;
+                                        Death(Database);
+                                    }
+                                }
+                                else if (health > 0)
+                                {
+                                    Console.WriteLine($"YOU MANAGED TO DODGE THE {monster.Name}'S ATTACK !!!!");
+                                }
+
+
+                            }
+                            else if (useItem.Type == "Damage")
+                            {
+
+                                if (Player.Energy > useItem.Level)
+                                {
+
+                                    Console.WriteLine($"You attacked the {monster.Name} for {(int)Player.Level + (int)useItem.Level} damage with {useItem.Name}.");
+                                    Player.Energy -= useItem.Level;
+                                    health -= (int)Player.Level + (int)weapon.Level;
+                                    Database.SaveChanges();
+                                }
+                                else
+                                {
+                                    Console.WriteLine("You don't have enough energy to use the BOMB!!!");
+                                }
+
+                                if (health <= 0)
+                                {
+                                    fighting = false;
+                                    Console.WriteLine($"You Defeated {monster.Name} and Gained {level / 10} experience");
+                                    LevelUp(Database, level, Player, weapon);
+
+                                    if (Random.Next(0, 100) > 50)
+                                    {
+                                        Loot(Database, Player);
+                                    }
+
+                                    Console.WriteLine("Congrats! You managed to defeat the FINALBOSS after a hard won fight and saved your family! You WIN!");
+                                }
+
+                                if (Random.Next(0, 100) > 20 && health > 0)
+                                {
+                                    Console.WriteLine($"{monster.Name} attacked the for {level} damage");
+                                    Player.Health -= level;
+                                    Database.SaveChanges();
+
+                                    if (Player.Health <= 0)
+                                    {
+                                        fighting = false;
+                                        Death(Database);
+                                    }
+                                }
+                                else if (health > 0)
+                                {
+                                    Console.WriteLine($"YOU MANAGED TO DODGE THE {monster.Name}'S ATTACK !!!!");
+                                }
+
+                            }
+                            else if (useItem.Type == "Food")
+                            {
+
+                                if (Player.Energy + useItem.Level > ((int)Player.Level * 100))
+                                {
+                                    Player.Energy = (int)Player.Level * 100;
+                                    Player.Items.Remove(useItem);
+                                    Database.SaveChanges();
+                                }
+                                else
+                                {
+                                    Player.Energy += useItem.Level;
+                                    Player.Items.Remove(useItem);
+                                    Database.SaveChanges();
+                                }
+
+                                if (Random.Next(0, 100) > 20 && health > 0)
+                                {
+                                    Console.WriteLine($"{monster.Name} attacked the for {level} damage");
+                                    Player.Health -= level;
+                                    Database.SaveChanges();
+
+                                    if (Player.Health <= 0)
+                                    {
+                                        fighting = false;
+                                        Death(Database);
+                                    }
+                                }
+                                else if (health > 0)
+                                {
+                                    Console.WriteLine($"YOU MANAGED TO DODGE THE {monster.Name}'S ATTACK !!!!");
+                                }
+                            }
+
+                        }
+                        else
+                        {
+
+                            Console.WriteLine("You don't have any useful items in inventory. You are unable to use any items.");
+                        }
+
+                        break;
+
+                    case 3:
+                        if (level < Player.Level)
+                        {
+                            fighting = false;
+                            Console.WriteLine("You managed to escape!");
+                            break;
+
+                        }
+                        else
+                        {
+
+                            if (Random.Next(0, 100) > 60)
+                            {
+                                fighting = false;
+                                Console.WriteLine("You managed to escape!");
+                                break;
+
+                            }
+                            else
+                            {
+                                Console.WriteLine("You were unable to escape.");
+                            }
+
+                        }
+
+                        if (Random.Next(0, 100) > 20 && health > 0)
+                        {
+                            Console.WriteLine($"{monster.Name} attacked the for {level} damage");
+                            Player.Health -= level;
+                            Database.SaveChanges();
+
+                            if (Player.Health <= 0)
+                            {
+                                fighting = false;
+                                Death(Database);
+                            }
+                        }
+                        else if (health > 0)
+                        {
+                            Console.WriteLine($"YOU MANAGED TO DODGE THE {monster.Name}'S ATTACK !!!!");
+                        }
+                        break;
+                }
+            }
 
         }
 
