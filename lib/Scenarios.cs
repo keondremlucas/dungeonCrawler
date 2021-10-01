@@ -95,6 +95,7 @@ namespace lib
                 var health = selectedMonster.Health;
                 var level = selectedMonster.Level;
                 var energy = selectedMonster.Energy;
+                
                 while(fighting)
                 {
                     Console.WriteLine();
@@ -117,7 +118,7 @@ namespace lib
                             {
                                 fighting=false;
                                 Console.WriteLine($"You Defeated {selectedMonster.Name} and Gained {level} experience");
-                                LevelUp(Database,level,player,weapon);
+                                LevelUp(Database,level,Player,weapon);
                             }
                             
                         }
@@ -141,9 +142,193 @@ namespace lib
                             Console.WriteLine($"YOU MANAGED TO DODGE THE {selectedMonster.Name}'S ATTACK !!!!");
                         }
                         break;
+
                         case 2:
+
+                            if(Player.Items.Count()>1){
+
+                                var items=Player.Items.Where(item=>item.Type!="Weapon");
+
+                                foreach(var item in items){
+
+                                    Console.WriteLine($"Item Id: {item.Id} Item Name: {item.Name} Description: {item.Description}");
+                                }
+
+                                Console.WriteLine("Enter the id of the item you want to use: ");
+                                var itemChoice=Int32.Parse(Console.ReadLine());
+
+                                var useItem=Player.Items.Where(item=>item.Id==itemChoice).First();
+
+                                if(useItem.Type=="Healing"){
+
+                                    if(Player.Health+useItem.Level>((int)Player.Level*100)) {
+                                            Player.Health=(int)Player.Level*100;
+                                            Player.Items.Remove(useItem);
+                                            Database.SaveChanges();
+                                    }  else{
+                                        Player.Health+=useItem.Level;
+                                        Player.Items.Remove(useItem);
+                                        Database.SaveChanges();
+                                    } 
+
+                                    if(Random.Next(0,100)>20 && health > 0){
+                                        Console.WriteLine($"{selectedMonster.Name} attacked the for {level/10} damage");
+                                            Player.Health -= level;
+                                            Database.SaveChanges();
+
+                                            if(Player.Health <=0)
+                                            {
+                                                fighting=false;
+                                                Death(Database);
+                                            }
+                                        }
+                                        else if(health > 0)
+                                        {
+                                            Console.WriteLine($"YOU MANAGED TO DODGE THE {selectedMonster.Name}'S ATTACK !!!!");
+                                        } 
+                                    
+
+                                }else if(useItem.Type=="Spell"){
+                                    
+                                    if(Player.Energy>useItem.Level){
+
+                                        Console.WriteLine($"You attacked the {selectedMonster.Name} for {(int) Player.Level + (int) useItem.Level} damage");
+                                        Player.Energy-=useItem.Level;
+                                        health -= (int) Player.Level + (int) weapon.Level; 
+                                        Database.SaveChanges(); 
+                                    }else{
+                                        Console.WriteLine("You don't have enough energy to cast the SPELL!!!");
+                                    }
+
+                                     if(health <=0)
+                                    {
+                                    fighting=false;
+                                    Console.WriteLine($"You Defeated {selectedMonster.Name} and Gained {level/10} experience");
+                                    LevelUp(Database,level,Player,weapon);
+                                    }
+
+                                    if(Random.Next(0,100)>20 && health > 0){
+                                        Console.WriteLine($"{selectedMonster.Name} attacked the for {level} damage with {useItem.Name}");
+                                        Player.Health -= level;
+                                        Database.SaveChanges();
+
+                                        if(Player.Health <=0)
+                                        {
+                                            fighting=false;
+                                            Death(Database);
+                                        }
+                                    }
+                                    else if(health > 0)
+                                    {
+                                        Console.WriteLine($"YOU MANAGED TO DODGE THE {selectedMonster.Name}'S ATTACK !!!!");
+                                    }
+                                    
+
+                                }else if(useItem.Type=="Damage"){
+
+                                     if(Player.Energy>useItem.Level){
+
+                                        Console.WriteLine($"You attacked the {selectedMonster.Name} for {(int) Player.Level + (int) useItem.Level} damage with {useItem.Name}.");
+                                        Player.Energy-=useItem.Level;
+                                        health -= (int) Player.Level + (int) weapon.Level; 
+                                        Database.SaveChanges(); 
+                                    }else{
+                                        Console.WriteLine("You don't have enough energy to use the BOMB!!!");
+                                    }
+
+                                     if(health <=0)
+                                    {
+                                    fighting=false;
+                                    Console.WriteLine($"You Defeated {selectedMonster.Name} and Gained {level/10} experience");
+                                    LevelUp(Database,level,Player,weapon);
+                                    }
+
+                                    if(Random.Next(0,100)>20 && health > 0){
+                                        Console.WriteLine($"{selectedMonster.Name} attacked the for {level} damage");
+                                        Player.Health -= level;
+                                        Database.SaveChanges();
+
+                                        if(Player.Health <=0)
+                                        {
+                                            fighting=false;
+                                            Death(Database);
+                                        }
+                                    }
+                                    else if(health > 0)
+                                    {
+                                        Console.WriteLine($"YOU MANAGED TO DODGE THE {selectedMonster.Name}'S ATTACK !!!!");
+                                    }
+
+                                }else if(useItem.Type=="Food"){
+
+                                    if(Player.Energy+useItem.Level>((int)Player.Level*100)) {
+                                            Player.Energy=(int)Player.Level*100;
+                                            Player.Items.Remove(useItem);
+                                            Database.SaveChanges();
+                                    }  else{
+                                        Player.Energy+=useItem.Level;
+                                        Player.Items.Remove(useItem);
+                                        Database.SaveChanges();
+                                    } 
+
+                                    if(Random.Next(0,100)>20 && health > 0){
+                                        Console.WriteLine($"{selectedMonster.Name} attacked the for {level} damage");
+                                        Player.Health -= level;
+                                        Database.SaveChanges();
+
+                                        if(Player.Health <=0)
+                                        {
+                                            fighting=false;
+                                            Death(Database);
+                                        }
+                                    }
+                                    else if(health > 0)
+                                    {
+                                        Console.WriteLine($"YOU MANAGED TO DODGE THE {selectedMonster.Name}'S ATTACK !!!!");
+                                    }
+                                            }
+
+                                        }else{
+
+                                            Console.WriteLine("You only have your sword in inventory. You are unable to use any other items.");
+                                        }
+
                         break;
+
                         case 3:
+                            if(level<Player.Level){
+                                fighting=false;
+                                Console.WriteLine("You managed to escape!");
+                                break;
+
+                            }else{
+
+                                if(Random.Next(0,100)>60){
+                                    fighting=false;
+                                    Console.WriteLine("You managed to escape!");
+                                    break;
+
+                                }else{
+                                    Console.WriteLine("You were unable to escape.");
+                                }
+
+                            }
+
+                            if(Random.Next(0,100)>20 && health > 0){
+                            Console.WriteLine($"{selectedMonster.Name} attacked the for {level} damage");
+                            Player.Health -= level;
+                            Database.SaveChanges();
+
+                            if(Player.Health <=0)
+                            {
+                                fighting=false;
+                                Death(Database);
+                            }
+                        }
+                        else if(health > 0)
+                        {
+                            Console.WriteLine($"YOU MANAGED TO DODGE THE {selectedMonster.Name}'S ATTACK !!!!");
+                        }
                         break;
                     }
                 }
@@ -187,9 +372,34 @@ namespace lib
                 
 
             }
-            public static void LevelUp(Database Database,int experience,Character player,Item weapon)
+            public static void LevelUp(Database Database,decimal experience,Character player,Item weapon)
             {
+                var playerlvl=player.Level;
+
+                playerlvl=playerlvl+(experience/10);
+
+                if((int)playerlvl==(int)(player.Level+1)){
+
+                    Console.WriteLine("Congrats! you leveled up!");
+                    player.Health=((int)playerlvl*100);
+                    player.Energy=((int)playerlvl*100);
+                    player.Level=playerlvl;
+                    weapon.Level=playerlvl;
+                    Database.SaveChanges();
+
+                }else{
+                    player.Health=((int)playerlvl*100);
+                    player.Energy=((int)playerlvl*100);
+                    player.Level=playerlvl;
+                    weapon.Level=playerlvl;
+                    Database.SaveChanges();
+                }
+
                 
+            }
+
+            public static void Loot(){
+
             }
 
 

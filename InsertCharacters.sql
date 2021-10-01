@@ -18,7 +18,12 @@
 -- INSERT INTO Characters (Name , Description, Type, Level,Health, Energy, Location) VALUES ("butterfly","Scary", "Monster", 1, 1, 1, "all" );
 -- INSERT INTO Characters (Name , Description, Type, Level,Health, Energy, Location) VALUES ("Raccoon","Trash Panda", "Monster", 1, 10, 5, "all" );
 
-INSERT INTO Items (Name , Description, Type, Level) VALUES ("Magic Sword","Levels up with You!", "Weapon", 1);
-UPDATE Characters set Location = "Home" WHERE Id = 1;
+-- INSERT INTO Items (Name , Description, Type, Level) VALUES ("Magic Sword","Levels up with You!", "Weapon", 1);
+-- UPDATE Characters set Location = "Home" WHERE Id = 1;
 
+-- INSERT INTO Items (Name , Description, Type, Level) VALUES ("Magic Missile","Attack the enemey with magic. You'ra a wizard!", "Spell", 10);
+-- INSERT INTO Items (Name , Description, Type, Level) VALUES ("Magic Potion","Restores your health. You don't want to DIE!", "Healing", 100);
+-- INSERT INTO Items (Name , Description, Type, Level) VALUES ("Apple Pie","Restores your energy. You're ready for battle!", "Food", 50);
+-- INSERT INTO Items (Name , Description, Type, Level) VALUES ("Bomb","Blow your enemy to bits!", "Damage", 20);
+-- INSERT INTO Map (Name , Type, Description, IsDiscovered) VALUES ("Castle of Doom", "Boss's Castle","The FinalBoss's Castle. Are you ready to face him?", 0 );
 
