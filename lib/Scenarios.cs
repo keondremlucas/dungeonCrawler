@@ -441,6 +441,9 @@ namespace lib
         {
             Random Random = new Random();
             var locations = Database.Map.Where(map => map.IsDiscovered == 0).ToList();
+            if(locations.Count()==0){
+                locations=Database.Map.Where(loc=>loc.Id!=8).ToList();
+            }
             var locationOption = locations[Random.Next(0, locations.Count() - 1)];
             var Player = Database.Characters.First();
             Player.Location = locationOption.Name;
