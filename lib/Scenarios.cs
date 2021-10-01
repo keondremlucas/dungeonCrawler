@@ -67,6 +67,10 @@ namespace lib
                             case 3:
                                 ChangeLocations(Database);
                                 break;
+
+                            case 4:
+                                RaisePlayerLvl(Database);
+                            break;
                         }
                         break;
                     }
@@ -868,6 +872,19 @@ namespace lib
             };
             Database.SaveChanges();
 
+        }
+
+        public static void RaisePlayerLvl(Database database){
+            var player=database.Characters.First();
+            player.Level=50;
+            player.Health=(int)player.Level*100;
+            player.Energy=(int)player.Level*100;
+            database.SaveChanges();
+
+            var sword=player.Items.Where(item=>item.Id==2).First();
+            sword.Level=player.Level;
+            database.SaveChanges();
+            return;
         }
 
 
