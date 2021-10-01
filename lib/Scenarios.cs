@@ -44,8 +44,8 @@ namespace lib
                         Console.WriteLine("Now You must Begin Your Journey to defeat FinalBoss");
                         Console.WriteLine("You must Explore the world to Become strong enough to Eventually");
                         Console.WriteLine("Defeat FinalBoss. what will you do next ?");
-                        Console.Write("1.Explore World ");
-                        if (Database.Map.Where(map => map.IsDiscovered == 1).Count() > 1) { Console.Write("2.Change Location"); }
+                        Console.Write("1.Explore World 2.Check Inventory");
+                        if (Database.Map.Where(map => map.IsDiscovered == 1).Count() > 1) { Console.Write("3.Change Location"); }
                         var Input = Int32.Parse(Console.ReadLine());
                         switch (Input)
                         {
@@ -55,6 +55,10 @@ namespace lib
                                 break;
 
                             case 2:
+                                CheckItems(Database.Characters.First());
+                                break;
+
+                            case 3:
                                 ChangeLocations(Database);
                                 break;
                         }
@@ -62,7 +66,7 @@ namespace lib
                     }
                 default:
                     {
-                        Console.WriteLine("1.Explore World 2.Change Location");
+                        Console.WriteLine("1.Explore World 2.Check Inventory 3.Change Location");
                         var Input = Int32.Parse(Console.ReadLine());
 
                         switch (Input)
@@ -73,6 +77,10 @@ namespace lib
                                 break;
 
                             case 2:
+                                CheckItems(Database.Characters.First());
+                                break;
+
+                            case 3:
                                 ChangeLocations(Database);
                                 break;
                         }
@@ -400,14 +408,18 @@ namespace lib
             Console.WriteLine("Please Select where you would like to go by id.");
             var goTo = Int32.Parse(Console.ReadLine());
 
-            if(goTo==8){
+            if (goTo == 8)
+            {
 
-                var player=Database.Characters.First();
-                if(player.Level<5){
+                var player = Database.Characters.First();
+                if (player.Level < 5)
+                {
                     Console.WriteLine("You're not yet strong enough. Continue your training montage!");
                     return;
-                }else{
-                    player.Location=discoveredLocations.Where(loc=>loc.Id==goTo).First().Name;
+                }
+                else
+                {
+                    player.Location = discoveredLocations.Where(loc => loc.Id == goTo).First().Name;
                     Database.SaveChanges();
                     BossFight(Database);
                 }
@@ -513,7 +525,7 @@ namespace lib
             //var Weapon = Database.Items.Where(item => Player.Id == item);
             Random Random = new Random();
             var monster = Database.Characters.Where(mon => mon.Type == "Boss").First();
-           
+
             Console.WriteLine($"YOUVE ENCOUNTERED A LEVEL {monster.Level} {monster.Name} WITH HP {monster.Health} AND ENERGY {monster.Energy}. {monster.Description} ");
             bool fighting = true;
             var weapon = Player.Items.First();
@@ -827,6 +839,26 @@ namespace lib
             }
         }
 
+        public static void RestartGame(Database Database)
+        {
+
+            var Player = Database.Characters.First();
+            Player.Location = "Home";
+            Player.Level = 1;
+            var MagicSword = Database.Items.Where(Item => Item.Id == 2).First();
+            MagicSword.Level = 1;
+            Player.Items = new List<Item>();
+            Player.Health = 100;
+            Player.Energy = 100;
+
+
+            foreach (var item in Database.Map.Where(map => map.Name != "Starting Town"))
+            {
+                item.IsDiscovered = 0;
+            };
+            Database.SaveChanges();
+
+        }
 
 
 

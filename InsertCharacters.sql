@@ -1,5 +1,5 @@
 -- INSERT INTO Characters (Name , Description, Type, Level, Health, Energy, Location) VALUES ("Hero","The main character", "Player", 1, 100, 100, "Home" );
--- INSERT INTO Characters (Name , Description, Type, Level,Health, Energy, Location) VALUES ("Final-Boss","The antagonist", "BOSS", 100, 1000, 1000, "The Labryinth" );
+-- INSERT INTO Characters (Name , Description, Type, Level,Health, Energy, Location) VALUES ("Final-Boss","The antagonist", "BOSS", 50, 500, 500, "Castle of Doom" );
 -- INSERT INTO Map (Name , Type, Description, IsDiscovered) VALUES ("Starting Town", "City","Journey start", 1 );
 -- INSERT INTO Items (Name , Description, Type, Level) VALUES ("Big Stick","Found on the Ground its just a stick", "Weapon", 1);
 
