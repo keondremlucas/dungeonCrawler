@@ -386,7 +386,22 @@ namespace lib
         }
         public static void ChangeLocations(Database Database)
         {
+            var discoveredLocations = Database.Map.Where(loc => loc.IsDiscovered == 1).ToList();
 
+            Console.WriteLine("These are the locations you have discovered: ");
+            Console.WriteLine();
+
+            foreach (var loc in discoveredLocations)
+            {
+                Console.WriteLine($"Id: {loc.Id} Name: {loc.Name}");
+            }
+
+            Console.WriteLine("Please Select where you would like to go by id.");
+            var goTo = Int32.Parse(Console.ReadLine());
+
+            Database.Characters.First().Location = discoveredLocations.Where(loc => loc.Id == goTo).First().Name;
+
+            Database.SaveChanges();
 
         }
         public static void ExploreWorld(Database Database)
@@ -466,6 +481,7 @@ namespace lib
 
         public static void BossFight(Database database)
         {
+
 
         }
 
