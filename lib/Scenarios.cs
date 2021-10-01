@@ -119,6 +119,10 @@ namespace lib
                                 fighting=false;
                                 Console.WriteLine($"You Defeated {selectedMonster.Name} and Gained {level} experience");
                                 LevelUp(Database,level,Player,weapon);
+
+                                if(Random.Next(0,100)>50){
+                                    Loot(Database, Player);
+                                }
                             }
                             
                         }
@@ -205,6 +209,10 @@ namespace lib
                                     fighting=false;
                                     Console.WriteLine($"You Defeated {selectedMonster.Name} and Gained {level/10} experience");
                                     LevelUp(Database,level,Player,weapon);
+
+                                        if(Random.Next(0,100)>50){
+                                        Loot(Database, Player);
+                                        }
                                     }
 
                                     if(Random.Next(0,100)>20 && health > 0){
@@ -241,6 +249,10 @@ namespace lib
                                     fighting=false;
                                     Console.WriteLine($"You Defeated {selectedMonster.Name} and Gained {level/10} experience");
                                     LevelUp(Database,level,Player,weapon);
+
+                                        if(Random.Next(0,100)>50){
+                                        Loot(Database, Player);
+                                        }
                                     }
 
                                     if(Random.Next(0,100)>20 && health > 0){
@@ -398,7 +410,15 @@ namespace lib
                 
             }
 
-            public static void Loot(){
+            public static void Loot(Database database,Character Player){
+                Random Random = new Random();
+                var loot=database.Items.Where(item=>item.Type!="Weapon"&&!Player.Items.Contains(item)).ToList();
+                var lootDropped=loot[Random.Next(0,loot.Count()-1)];
+                Player.Items.Add(lootDropped);
+                database.SaveChanges();
+            }
+
+            public static void BossFight(Database database){
 
             }
 
