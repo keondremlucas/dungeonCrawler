@@ -386,6 +386,7 @@ namespace lib
         }
         public static void ChangeLocations(Database Database)
         {
+            Random Random = new Random();
             var discoveredLocations = Database.Map.Where(loc => loc.IsDiscovered == 1).ToList();
 
             Console.WriteLine("These are the locations you have discovered: ");
@@ -402,7 +403,14 @@ namespace lib
             Database.Characters.First().Location = discoveredLocations.Where(loc => loc.Id == goTo).First().Name;
 
             Database.SaveChanges();
+            if (Random.Next(0, 100) > 50)
+            {
+                Fight(Database);
+            }
 
+            var newloc = discoveredLocations.Where(loc => loc.Id == goTo).First();
+
+            Console.WriteLine($"You are now in {newloc.Name}.");
         }
         public static void ExploreWorld(Database Database)
         {
@@ -425,7 +433,7 @@ namespace lib
             var Player = Database.Characters.First();
             Player.Location = "Home";
             Player.Level = 1;
-            var MagicSword = Player.Items.Where(item => item.Id == 2).First();
+            var MagicSword = Database.Items.Where(Item => Item.Id == 2).First();
             MagicSword.Level = 1;
             Player.Items = new List<Item>();
             Player.Health = 100;
